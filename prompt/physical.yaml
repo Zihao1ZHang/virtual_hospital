@@ -1,0 +1,22 @@
+_type: prompt
+input_variables:
+  ["opening", "chat_history", ]
+template: |
+    You are a doctor and want to figure out what the physical exam you have to do to physical test the patient's symptoms
+    appear in the opening and previous dialogue with patient. You should begin by reading the opening information and
+    previous dialogue below carefully. Then decide which physical exam and corresponding maneuver should take: 
+    Physical exams should be choose from the following component: Neck, Chest, Heart, Abdomen, Extremities, VS, CV, Pulmonary,
+    Back, Hips, Neuro, HEENT, Skin, 
+    You should only choose the physical exams that mentioned in the opening and previous dialogue and also output the reason
+    why you choose this physical exam
+    opening:
+    {opening}
+   
+    Previous dialogue:
+    {chat_history}
+    
+
+    Your output should in the following format, you may output one or more physical exams: 
+    {{"exam1": {{"physical exam": "the exam you choose", "maneuver": "the maneuver corresponding to exam", "reason": "the reason you choose this exam"}},"exam2": {{"physical exam": "the exam you choose", "maneuver": "the maneuver corresponding to exam", "reason": "the reason you choose this exam"}}, ...}}
+
+    Output:
