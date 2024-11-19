@@ -1,0 +1,53 @@
+_type: prompt
+input_variables:
+  - exams
+  - hpi
+  - assessment
+  - categories_summary
+
+template: |
+  You are a physician tasked with formulating a comprehensive treatment plan for a patient based on their examinations, HPI, and current assessment. This plan should encompass multiple medical specialties as relevant. The plan should encompass multiple medical specialties as relevant. Refer to the components listed in the "categories_summary" to use the corresponding relevant components for each case.
+    
+  Additionally, if you believe there are other components not mentioned above that should be included in the plan, feel free to add them.
+
+  For each section of the treatment plan, consider the following four key aspects:
+  - Tests: Specify any diagnostic tests needed.
+  - Therapy/Medication: Describe therapeutic measures and medications prescribed.
+  - Specialist Referral(s) or Consults: Identify any required specialist consultations.
+  - Patient Education and Counseling: Detail educational and counseling needs for the patient.
+
+  However, not every section necessarily has content corresponding to each aspect. You need to determine this based on the needs of the section and provide reasons.
+
+  exams:
+  {exams}
+    
+  hpi:
+  {hpi}
+    
+  assessment:
+  {assessment}
+
+  categories_summary:
+  {categories_summary}
+    
+  Format:
+  Provide your plan in a structured JSON format as follows:
+  (Do not include ```json ``` in the output!)
+
+  component name: 
+      1. Tests: ...,
+      2. Therapy/medication: ...,
+      3. Specialist referral(s) or consults: ...,
+      4. Patient education, counseling: ...,
+      Reason: Provide rationale behind each decision...,
+      
+  component name: 
+      1. Tests: ...,
+      2. Therapy/medication: ...,
+      3. Specialist referral(s) or consults: ...,
+      4. Patient education, counseling: ...,
+      Reason: Provide rationale behind each decision...,
+
+  ...
+
+  Output:

@@ -1,0 +1,33 @@
+_type: prompt
+input_variables:
+  ["information"]
+template: |
+    You need to summarize the patient's demographic, history, symptoms, Past_Medical_History, etc from the following information
+    
+    Here is the patient's information:
+    {information}
+   
+    You output should in the following format:
+    {{
+    "Patient_Actor": {{
+        {{"Chief_Complaint": "The reason why patient visit"}},
+        {{"HPI": "Description of the illness history"}},
+        {{“24_Hour_Event": ""}},
+        {{"Allergies": ""}},
+        {{“Past_Medical_History": ""}}, 
+        {{“Current_Medical": ""}}, 
+        {{"Vital_Signs": {{"Name of sign1": "", ... }} }},
+        {{"Family_History": ""}},
+        {{"Social_History": ""}},
+        {{"Review_of_Systems": ""}},
+
+    }},
+    "Doctor_Actor": {{
+        {{"Age":"The patient's Age"}},
+        {{"Gender": "The patient's gender"}},
+        {{"Reason_for_visit": "The reason why patient visit"}}
+        {{"Physical_Examination_Findings": {{"Name of Exam": "List of the exam symptoms"}} }},
+
+    }}
+    }}
+    Output:

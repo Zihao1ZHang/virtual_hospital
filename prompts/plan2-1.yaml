@@ -1,0 +1,35 @@
+_type: prompt
+input_variables:
+  - exams
+  - hpi
+  - assessment
+  - categories_summary
+
+template: |
+  As a physician preparing a treatment plan for a patient, your task is to carefully analyze the patient's health information, including examination results, history of present illness (HPI), and current assessments. From the provided "categories_summary," you need to select only the components that are relevant to each specific case.
+
+  Here is a step-by-step approach to what you should do:
+
+  - Review Patient Information: Examine all provided details in the patient's HPI, examination results, and current assessment.
+  - Identify Relevant Categories: From the "categories_summary," pick out those categories that directly relate to the findings and diagnoses in the patient information.
+  - Avoid Duplication: When categories with similar names appear, such as "Neurologic" and "Problem: Neurological checks," choose only one to keep in the plan to avoid redundancy. This ensures clarity and focus in the treatment plan.
+  - Compile the Selected Categories: List the chosen categories as part of the treatment plan outline, ensuring that each is pertinent to the patient's specific conditions and needs.
+  
+  Your primary goal is to synthesize this information into a concise and actionable treatment plan that is tailored to the individual needs of the patient, based on the relevant data gathered and analyzed.
+
+  exams:
+  {exams}
+    
+  hpi:
+  {hpi}
+    
+  assessment:
+  {assessment}
+
+  categories_summary:
+  {categories_summary}
+    
+  Format:
+  Provide your plan in a structured JSON format.
+
+  Output:

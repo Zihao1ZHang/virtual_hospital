@@ -1,0 +1,35 @@
+_type: prompt
+input_variables:
+  - generated_plan
+  - target_plan
+
+template: |
+  You are an evaluator whose task is to assess and compare a medical student's treatment plan to the provided target plan. Based on following specific criteria, determine the score for the student's answer.
+
+
+  Evaluation Criteria:
+  1. Component Coverage(0-100): The score reflects the proportion of target Components covered in the student's plan, with full marks at 100. For instance, covering 3 out of 5 target exams scores 60.
+  2. Reason Accuracy (0-100): Scores are allocated based on the relevance and accuracy of the reasons for components.
+
+
+
+  generated_plan:
+  {generated_plan}
+    
+  target_plan:
+  {target_plan}
+
+    
+  Format:
+  Provide your plan in a structured JSON format as follows:
+  (Do not include ```json ``` in the output!)
+
+  Component Coverage Score: ...,
+  Reason: "Detail each component's alignment between the student's and target plan. Note any components without correspondence."
+  Reason Accuracy Score: ...,
+  Reason: ...
+  Extra Exams Penalty Score: ...
+  Reason: ...
+
+
+  Output:

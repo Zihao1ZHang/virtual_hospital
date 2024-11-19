@@ -1,0 +1,26 @@
+_type: prompt
+input_variables:
+  - gt
+  - physician_note
+
+template: |
+  You will be given a physician note writen by medical student. Your job is compare this note and the ground truth, then
+  evaluation whether the note writen by student is missing some information or add some extra information that did not appear on ground truth. 
+  
+  Note writen by student:
+  {physician_note}
+  
+  Ground Truth:
+  {gt}
+  
+  Your output should be in the following format:
+  {{"Number of missing info": "", "Missing info": "", "Number of extra info": "Number of information that not appear on ground truth", "Extra info": ""}}
+  
+  Output: 
+  
+  
+  
+  
+  
+  
+  

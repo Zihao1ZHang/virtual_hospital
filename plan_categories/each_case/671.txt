@@ -1,0 +1,5 @@
+Problem: Neurological checks
+Problem: Diabetes management
+Problem: Elevated WBC and fevers
+Problem: Subarachnoid hemorrhage (SAH)
+Problem: Transition to step-down unit

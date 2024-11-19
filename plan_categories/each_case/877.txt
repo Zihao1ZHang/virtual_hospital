@@ -1,0 +1,14 @@
+Cardiovascular
+Pulmonary
+GI/Abdomen
+Nutrition
+Renal
+Hematology
+Endocrine
+Pain Management
+Lines/Tubes/Drains
+Imaging
+Prophylaxis
+Consultations
+Code Status
+Disposition

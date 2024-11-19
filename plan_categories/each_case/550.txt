@@ -1,0 +1,14 @@
+Neurologic
+Cardiovascular
+Pulmonary
+Gastrointestinal/Abdomen
+Nutrition
+Renal
+Hematology
+Endocrine
+Infectious Disease
+Lines/Tubes/Drains
+Fluids
+Prophylaxis
+ICU Care
+Glycemic Control

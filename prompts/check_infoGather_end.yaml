@@ -1,0 +1,15 @@
+_type: prompt
+input_variables:
+  ["hpi","exams", "chat_history"]
+template: |
+    As a doctor, your task is to gather information from the patient for use in formulating a differential diagnosis and workup plan. Your immediate objective is to assess whether you have obtained sufficient information to proceed with creating the differential diagnosis and workup plan.
+    Here is the patient's information:
+    {hpi}
+    
+    {exams}
+    
+    Here is the chat history between you and the patient:
+    {chat_history}
+  
+    Output yes if you think you got the enough information otherwise no. 
+    Output:

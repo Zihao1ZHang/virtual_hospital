@@ -1,114 +1,112 @@
-import langchain
-langchain.debug = False
 from langchain.prompts import load_prompt
-# from agents.question.initialize import *
-from langchain.chat_models import ChatOpenAI
-from langchain import LLMChain
+from langchain.chains import LLMChain
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
 import json
-import os
+import re
 
-model_name = "gpt-4"
-# model_name = "gpt-3.5-turbo-16k" # gpt-4
+load_dotenv()
 
-api_key = "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"
+def patient_agent(hpi: str, chat_history: str, question: str, model_name: str):
+    prompt = load_prompt("prompts/QA_patient.yaml")
 
-def diff_func(exam_history: str):
-    """
-    Tools that summarized the change of the previous exmination
-        valid parameter include exam_list: a list of examination history
-    """
-    prompt = load_prompt("../prompt/pre_physician_summary.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
+    llm = ChatOpenAI(model_name=model_name, temperature=0.7)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    return extract_json_data(
+        chain.invoke({"chat_history": chat_history, "hpi": hpi, "question": question})[
+            "text"
+        ]
     )
-    return winrate_chain.run({"exam_history": exam_history})
-
-def QA_func(opening: str, chat_history: str):
-    """
-    Tool that calls a chain to revise the summary,
-        valid parameter include "instruction":instruction, "model1": model1,"model2": model2,"model3": model3,
-    """
-    prompt = load_prompt("../prompt/QA.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"opening": opening, "chat_history": chat_history})
-
-def physical_func(opening: str, chat_history: str):
-    """
-    Tool that calls a chain to revise the summary,
-        valid parameter include "instruction":instruction, "model1": model1,"model2": model2,"model3": model3,
-    """
-    prompt = load_prompt("../prompt/physical.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"opening": opening, "chat_history": chat_history})
-
-def physical_func(opening: str, chat_history: str):
-    """
-    Tool that calls a chain to revise the summary,
-        valid parameter include "instruction":instruction, "model1": model1,"model2": model2,"model3": model3,
-    """
-    prompt = load_prompt("../prompt/physical.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"opening": opening, "chat_history": chat_history})
 
 
-def closure_func(opening: str, chat_history: str, pre_closure: str):
-    """
-    Tool that calls a chain to write the closure,
-        valid parameter include "opening":instruction, "chat_history": previous dialogue,"pre_closure": physical exam,
-    """
-    prompt = load_prompt("../prompt/closure.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"opening": opening, "chat_history": chat_history, "pre_closure": pre_closure})
+def doctor_agent(chat_history: str, info: str, model_name: str):
+    prompt = load_prompt("prompts/QA_doctor.yaml")
 
-def diagnosis_func(opening: str):
-    """
-    Tool that calls a chain to write the closure,
-        valid parameter include "opening":instruction, "chat_history": previous dialogue,"pre_closure": physical exam,
-    """
-    prompt = load_prompt("../prompt/diagnosis.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"opening": opening})
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    return extract_json_data(chain.invoke({"chat_history": chat_history, "info": info})["text"])
 
-def diagnosis_lite_func(historical: str, physical: str):
-    """
-    Tool that calls a chain to write the closure,
-        valid parameter include "opening":instruction, "chat_history": previous dialogue,"pre_closure": physical exam,
-    """
-    prompt = load_prompt("../prompt/diagnosis.yaml")
-    llm = ChatOpenAI(openai_api_key=api_key, temperature=0.9, model_name=model_name)
-    winrate_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=False,
-    )
-    return winrate_chain.run({"historical": historical, "physical": physical})
+
+def extract_json_data(text):
+    json_text = re.search(r"```json\n?({[\w\W]+})[\n]?```", text)  # find ```json{}```
+    if json_text:
+        return json.loads(json_text.group(1))
+    else:
+        json_text = re.search(r"{[\w\W]+}", text)  # only find {}
+        if json_text:
+            return json.loads(json_text.group(0))
+        else:
+            print("No JSON found in text")
+            return None
+
+
+def read_file(path: str):
+    with open(path, "r", encoding="UTF-8") as f:
+        return f.read()
+
+
+def save_result(path: str, result: str):
+    with open(path, "w", encoding="UTF-8") as f:
+        f.write(result)
+
+
+# print(doctor_agent(chat_history="", model_name="gpt-4-1106-preview"))
+
+def plan_run(exams: str, hpi: str, assessment: str, categories_summary: str, model_name: str):
+    prompt = load_prompt("prompts/plan.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"exams": exams, "hpi": hpi, "assessment": assessment, "categories_summary": categories_summary})
+    return response["text"]
+
+def plan2_1_run(exams: str, hpi: str, assessment: str, categories_summary: str, model_name: str):
+    prompt = load_prompt("prompts/plan2-1.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"exams": exams, "hpi": hpi, "assessment": assessment, "categories_summary": categories_summary})
+    return response["text"]
+
+def plan2_2_run(exams: str, hpi: str, assessment: str, plan_categories: str, model_name: str):
+    prompt = load_prompt("prompts/plan2-2.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"exams": exams, "hpi": hpi, "assessment": assessment, "plan_categories": plan_categories})
+    return response["text"]
+
+def plan_eval_run(generated_plan: str, target_plan: str, model_name: str):
+    prompt = load_prompt("prompts/plan_eval.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"generated_plan": generated_plan, "target_plan": target_plan})
+    return response["text"]
+
+def plan2_1_eval_run(generated_categories: str, target_categories: str, model_name: str):
+    prompt = load_prompt("prompts/plan2-1_eval.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"generated_categories": generated_categories, "target_categories": target_categories})
+    return response["text"]
+
+def plan2_2_eval_run(generated_plan: str, target_plan: str, model_name: str):
+    prompt = load_prompt("prompts/plan2-2_eval.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"generated_plan": generated_plan, "target_plan": target_plan})
+    return response["text"]
+
+
+def check_infoGather_end(hpi: str, exams: str, chat_history: str, model_name: str):
+    prompt = load_prompt("prompts/check_infoGather_end.yaml")
+
+    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=False)
+    response = chain.invoke({"hpi": hpi, "exams": exams, "chat_history": chat_history})
+    return response["text"]
 
 

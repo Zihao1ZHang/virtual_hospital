@@ -1,0 +1,14 @@
+_type: prompt
+input_variables:
+  - info
+
+template: |
+  As a doctor preparing for a patient's clinical visit, you want to conduct a thorough physical examination. 
+  Below is the patient's background information for your reference.
+  
+  {info}
+  
+  Please list the kind of physical examinations that you think it is necessary for the patient
+  Your output should be a list of name of the examinations.
+  
+  Output:

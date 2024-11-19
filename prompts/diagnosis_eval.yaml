@@ -1,0 +1,40 @@
+_type: prompt
+input_variables:
+  - predicted_diagnosis
+  - target_diagnosis
+template: |
+  You are an evaluator for the United States Medical Licensing Examination (USMLE), your task is to assess the quality of the diagnoses written by medical student. 
+  Your task is to compare the medical student's diagnosis book with the target diagnosis book provided. Both diagnosis books will contain three possible diagnoses. Each possible diagnosis follow the same structure: 
+  1. Diagnosis Name: Begins with the name of the diagnosis being considered.
+  2. Historical Finding: Lists the relevant historical information about the patient, including symptoms and medical history.
+  3. Physical Exam Finding: Describes the pertinent physical examination finding observed in the patient.
+  
+  Here are the guidelines and metrics that help you grade the diagnosis book:
+  1. Carefully examine the medical student's diagnosis book and the target diagnosis book.
+  2. For each diagnosis listed in the medical student's diagnosis book:
+    - Award 10 points if the medical student's diagnosis name exact match with the any one of the diagnosis in the target diagnosis book.
+    - If the medical student mentions a similar diagnosis, or the same diagnosis with a different name comparing to the target diagnosis book, award on a scale of 0 to 10 points based on the similarity of the diagnosis names.
+  3. For each matched diagnosis, carefully compare the historical finding between the medical student and the target:
+    - Award 1 point for each of the medical student's historical finding that match the target's historical finding.
+    - Student can get at most 3 points for the historical finding.
+    - If the diagnosis name itself get 0 point, the historical finding also get 0 point.
+    - If this target diagnosis does not have any historical finding, list "N/A" in the result output.
+  4. For each matched diagnosis, carefully compare the physical examination finding between the medical student and the target:
+    - Award 1 point for each of the medical student's physical finding that match the target's physical finding.
+    - Student can get at most 3 points for the physical finding.
+    - If the diagnosis name itself get 0 point, the physical finding also get 0 point.
+    - If this target diagnosis does not have any physical finding, list "N/A" in the result output.
+  5. The first diagnosis is the most essential one:
+    - Award extra 10 points only if the medical student's first diagnosis name match the first diagnosis name in the target book.
+    - Otherwise 0 point.
+
+  Here is the medical student's diagnosis book:
+  {pred}
+
+  Here is the target diagnosis book:
+  {target}
+
+  Your evaluation should be provided in JSON format, as follows:
+  {{"diagnosis 1 name": "the score medical student get for the first diagnosis name", "diagnosis 1 historical finding": "the score medical student get for the first diagnosis historical finding", "diagnosis 1 physical finding": "the score medical student get for the first diagnosis physical finding", "diagnosis 2 name": "the score medical student get for the second diagnosis name", "diagnosis 2 historical finding": "the score medical student get for the second diagnosis historical finding", "diagnosis 2 physical finding": "the score medical student get for the second diagnosis physical finding", "diagnosis 3 name": "the score medical student get for the third diagnosis name", "diagnosis 3 historical finding": "the score medical student get for the third diagnosis historical finding", "diagnosis 3 physical finding": "the score medical student get for the third diagnosis physical finding", "order": "award 10 points only if the medical student's first diagnosis name match the first diagnosis name in the target book. Otherwise 0 point", "total score": "the total sum of the score for all three diagnosis name and finding", "quality score": "a single quality score to indicate the overall performance of the medical student. The score is selected from [1, 2, 3, 4, 5] (1=incomprehensible and incorrect, failing to provide a plausible differential diagnosis, 5=clear and correct, offering a well-reasoned differential diagnosis supported by relevant findings)", "reason": "the reason why you gave the score, and any additional feedback on the student's performance"}}
+  
+  Output:

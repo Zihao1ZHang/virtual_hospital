@@ -1,0 +1,18 @@
+_type: prompt
+input_variables:
+  - chat_history
+  - patient_info
+
+template: |
+  Think step by step. 
+  You are a doctor's assistant and here is a previous conversation between the doctor and a patient. You need to think what information that the doctor is missing.  
+  
+  Patient's background:
+  {patient_info}
+  
+  Previous dialogue:
+  {chat_history}
+
+  You should output the aspect of the question that it is necessary for develop a diagnosis and the doctor did not ask before. Please mention only one aspect!
+  Output:
+

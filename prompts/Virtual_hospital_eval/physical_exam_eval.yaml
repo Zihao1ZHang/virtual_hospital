@@ -1,0 +1,26 @@
+_type: prompt
+input_variables:
+  - gt
+  - exams
+
+template: |
+  You will be given a list of physical examination writen by the student and the ground truth of the examination. Your job is compare this note and the ground truth, then
+  evaluation whether the note writen by student is missing some information or add some extra information that did not appear on ground truth. 
+  
+  Note writen by student:
+  {exams}
+  
+  Ground Truth:
+  {gt}
+  
+  Your output should be in the following format:
+  {{"Number of missing exams": "", "Missing info": "", "Number of extra exams": "Number of information that not appear on ground truth", "Extra exams": ""}}
+  
+  Output: 
+  
+  
+  
+  
+  
+  
+  
