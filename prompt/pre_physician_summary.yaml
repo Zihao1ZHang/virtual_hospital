@@ -1,8 +1,0 @@
-_type: prompt
-input_variables:
-  ["exam_history"]
-template: |
-    You need to summarize the examination history and changes 
-    previous exam and reports:
-    {exam_history}
-    Output:
